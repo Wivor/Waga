@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Waga 0.2</string>
+    <string name="TextView_text">0</string>
+    <string name="add">Add</string>
+    <string name="reset">Reset</string>
+    <string name="update">Update</string>
+</resources>
