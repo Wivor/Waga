@@ -24,19 +24,8 @@ class Register(val context: Context, val login: String, val pass: String, val ca
         var resultset: ResultSet? = null
         try {
             stmt = conn!!.createStatement()
-            resultset = stmt!!.executeQuery("SELECT User FROM mysql.user;")
 
-            if (stmt.execute("SELECT User FROM mysql.user;")) {
-                resultset = stmt.resultSet
-            }
-            while (resultset!!.next()) {
-                println(resultset.getString(1))
-                if(resultset.getString(1) == login) {
-                    isFail = true
-                    return z;
-                }
-            }
-            stmt!!.execute("call add_User('" + login + "', '" + pass + "')")
+            isFail = !stmt.execute("call add_User('" + login + "', '" + pass + "')")
 
         } catch (ex: SQLException) {
             // handle any errors
