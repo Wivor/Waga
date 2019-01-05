@@ -16,34 +16,38 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
     }
 
+    var login: String = ""
+    var pass: String = ""
+
     fun login(view: View){
         val login = findViewById<EditText>(R.id.editLoginLog)
-        val error = findViewById<TextView>(R.id.textLoginError)
         val pass= findViewById<EditText>(R.id.editLoginPass)
+        val error = findViewById<TextView>(R.id.textLoginError)
 
-        connect()
+        connect(login.text.toString(), pass.text.toString(), error)
     }
 
-    fun connect(){
-        val login = findViewById<EditText>(R.id.editLoginLog)
-        val pass= findViewById<EditText>(R.id.editLoginPass)
+    fun connect(login: String, pass: String, error: TextView){
 
-        val log = Login(this, login.text.toString(), pass.text.toString(),
-            object : CallBack {
-                override fun UpdateMyText(mystr: String) {
-
-                }
-            }, object : CallBackStatus {
+        val log = Login(this, login, pass,
+            object : CallBackStatus {
                 override fun UpdateMyStatus(myStatus: Boolean) {
-
+                    if(myStatus){
+                        setMain(login, pass)
+                    }
+                    else{
+                        error.text = "Błędne dane logowania!"
+                    }
                 }
             }
         )
         log.execute()
     }
 
-    fun setMain(view: View){
+    fun setMain(newLogin: String, newPass: String){
         val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra(this.login, newLogin)
+        intent.putExtra(this.pass, newPass)
         startActivity(intent)
     }
 }

@@ -20,13 +20,19 @@ class MainActivity : CallBack, AppCompatActivity() {
     }
 
     val products : ArrayList<Produkt> = ArrayList()
-
+    var login: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         connect()
+        setLogin()
+    }
+
+    fun setLogin(){
+        val textView = findViewById<TextView>(R.id.textView)
+        textView.text = login
     }
 
     fun setValue (view: View){

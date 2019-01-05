@@ -7,7 +7,7 @@ import java.sql.*
 import java.util.*
 
 
-class Login(val context: Context, val login : String, val pass : String, val callBack: CallBack, val callBackStatus: CallBackStatus) : AsyncTask<String, String, String>() {
+class Login(val context: Context, val login : String, val pass : String, val callBackStatus: CallBackStatus) : AsyncTask<String, String, String>() {
 
     internal var conn: Connection? = null
 
@@ -19,22 +19,20 @@ class Login(val context: Context, val login : String, val pass : String, val cal
     }
 */
     override fun doInBackground(vararg params: String): String {
-        try {
-            conn = Connect.getConnection(login, pass)
-        }catch (ex: SQLException){
-            print("---------------------------------------------------------------------")
+        conn = Connect.getConnection(login, pass)
+        if (conn == null) {
+            isFail = true
         }
 
         return z
     }
 
     override fun onPostExecute(s: String) {
-
-        Toast.makeText(context, "" + z, Toast.LENGTH_LONG).show()
-
         if (isFail) {
-            //startActivity(new Intent(MainActivity.this,Main2Activity.class));
-            Toast.makeText(context, "Połączono z bazą", Toast.LENGTH_LONG).show()
+            this.callBackStatus.UpdateMyStatus(true)
+        }
+        else {
+            this.callBackStatus.UpdateMyStatus(false)
         }
     }
 }
