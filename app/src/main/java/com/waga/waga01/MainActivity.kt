@@ -26,6 +26,8 @@ class MainActivity : AppCompatActivity() {
         login = intent.getStringExtra("Login")
         pass = intent.getStringExtra("Password")
 
+        connect()
+        update()
         setLogin()
     }
 
@@ -34,22 +36,11 @@ class MainActivity : AppCompatActivity() {
         textView.text = login + " " + pass
     }
 
-    fun setValue (view: View){
-        val textView = findViewById<TextView>(R.id.textView)
-        val editText = findViewById<EditText>(R.id.editText)
-
-        textView.text = editText.text.toString()
+    fun update (view: View){
+        update()
     }
 
-    fun resetValue (view: View){
-        println("hello")
-        val textView = findViewById<TextView>(R.id.textView)
-        textView.text = "0"
-    }
-
-    fun updateValue (view: View) {
-        connect()
-
+    fun update () {
         val table = findViewById<TableLayout>(R.id.table)
         products.forEach{prod ->
             val row = TableRow(this)
