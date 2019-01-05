@@ -24,8 +24,7 @@ class Register(val context: Context, val login: String, val pass: String, val ca
         var resultset: ResultSet? = null
         try {
             stmt = conn!!.createStatement()
-
-            isFail = !stmt.execute("call add_User('" + login + "', '" + pass + "')")
+            isFail = stmt.execute("call add_User('" + login + "', '" + pass + "')")
 
         } catch (ex: SQLException) {
             // handle any errors

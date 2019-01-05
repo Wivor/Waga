@@ -13,26 +13,25 @@ import android.widget.TableRow
 import android.widget.TextView
 
 
-class MainActivity : CallBack, AppCompatActivity() {
-    override fun UpdateMyText(mystr: String) {
-        val textView = findViewById<View>(R.id.textView2) as TextView
-        textView.text = mystr
-    }
+class MainActivity : AppCompatActivity() {
 
     val products : ArrayList<Produkt> = ArrayList()
-    var login: String = ""
+    var login: String = " "
+    var pass: String = " "
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        connect()
+        login = intent.getStringExtra("Login")
+        pass = intent.getStringExtra("Password")
+
         setLogin()
     }
 
     fun setLogin(){
         val textView = findViewById<TextView>(R.id.textView)
-        textView.text = login
+        textView.text = login + " " + pass
     }
 
     fun setValue (view: View){
@@ -49,6 +48,8 @@ class MainActivity : CallBack, AppCompatActivity() {
     }
 
     fun updateValue (view: View) {
+        connect()
+
         val table = findViewById<TableLayout>(R.id.table)
         products.forEach{prod ->
             val row = TableRow(this)

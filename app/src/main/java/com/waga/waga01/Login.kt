@@ -29,10 +29,10 @@ class Login(val context: Context, val login : String, val pass : String, val cal
 
     override fun onPostExecute(s: String) {
         if (isFail) {
-            this.callBackStatus.UpdateMyStatus(true)
+            this.callBackStatus.UpdateMyStatus(false)
         }
         else {
-            this.callBackStatus.UpdateMyStatus(false)
+            this.callBackStatus.UpdateMyStatus(true)
         }
     }
 }

@@ -16,9 +16,6 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
     }
 
-    var login: String = ""
-    var pass: String = ""
-
     fun login(view: View){
         val login = findViewById<EditText>(R.id.editLoginLog)
         val pass= findViewById<EditText>(R.id.editLoginPass)
@@ -46,8 +43,8 @@ class LoginActivity : AppCompatActivity() {
 
     fun setMain(newLogin: String, newPass: String){
         val intent = Intent(this, MainActivity::class.java)
-        intent.putExtra(this.login, newLogin)
-        intent.putExtra(this.pass, newPass)
+        intent.putExtra("Login", newLogin)
+        intent.putExtra("Password", newPass)
         startActivity(intent)
     }
 }
