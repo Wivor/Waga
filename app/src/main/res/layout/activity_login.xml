@@ -8,6 +8,15 @@
         tools:context=".LoginActivity"
         android:background="@color/screenBackground">
 
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:minHeight="?attr/actionBarSize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:titleTextColor="@android:color/holo_blue_dark"
+            android:background="?attr/colorPrimary">
+    </android.support.v7.widget.Toolbar>
+
     <TextView
             android:text="Login:"
             android:gravity="center"
