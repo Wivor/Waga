@@ -1,8 +1,10 @@
 package com.waga.waga01
 
 
+import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.TypedValue
@@ -16,6 +18,7 @@ import android.widget.TextView
 class MainActivity : AppCompatActivity() {
 
     val products : ArrayList<Produkt> = ArrayList()
+    var myDialog: Dialog? = null
     var login: String = " "
     var pass: String = " "
 
@@ -23,12 +26,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        myDialog = Dialog(this)
         login = intent.getStringExtra("Login")
         pass = intent.getStringExtra("Password")
 
         connect()
         update()
         setLogin()
+    }
+
+    fun showPopup(view: View){
+        myDialog?.setContentView(R.layout.popup_info)
+        myDialog?.getWindow()?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        myDialog?.show()
     }
 
     fun setLogin(){
