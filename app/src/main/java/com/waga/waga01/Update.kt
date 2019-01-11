@@ -7,7 +7,7 @@ import java.sql.*
 import java.util.*
 
 
-class Update(val context: Context, val products : ArrayList<Produkt>, val callBack: CallBack) : AsyncTask<String, String, String>() {
+class Update(val context: Context, val login: String, val pass: String, val products : ArrayList<Produkt>, val callBack: CallBack) : AsyncTask<String, String, String>() {
 
     internal var conn: Connection? = null
 
@@ -19,18 +19,24 @@ class Update(val context: Context, val products : ArrayList<Produkt>, val callBa
     }
 
     override fun doInBackground(vararg params: String): String {
-        conn = Connect.getConnection("root", "Mudz!n1337")
+        conn = Connect.getConnection(login, pass)
         var stmt: Statement? = null
         var resultset: ResultSet? = null
         try {
             stmt = conn!!.createStatement()
-            resultset = stmt!!.executeQuery("SELECT * FROM produkty;")
+            resultset = stmt!!.executeQuery("call get_products()")
 
-            if (stmt.execute("SELECT * FROM produkty;")) {
+            if (stmt.execute("call get_products()")) {
                 resultset = stmt.resultSet
             }
             while (resultset!!.next()) {
-                val product = Produkt(resultset.getInt(1), resultset.getString(2), resultset.getInt(3), resultset.getInt(5))
+                var name = ""
+                if (resultset.getString(1).isNullOrEmpty())
+                    name = "Nowy"
+                else
+                    name = resultset.getString(1)
+
+                val product = Produkt(name, resultset.getInt(2))
                 products.add(product)
             }
         } catch (ex: SQLException) {

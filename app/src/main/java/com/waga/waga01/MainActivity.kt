@@ -9,10 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
-import android.widget.EditText
-import android.widget.TableLayout
-import android.widget.TableRow
-import android.widget.TextView
+import android.widget.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -35,15 +32,9 @@ class MainActivity : AppCompatActivity() {
         setLogin()
     }
 
-    fun showPopup(view: View){
-        myDialog?.setContentView(R.layout.popup_info)
-        myDialog?.getWindow()?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        myDialog?.show()
-    }
-
     fun setLogin(){
         val textView = findViewById<TextView>(R.id.textView)
-        textView.text = login + " " + pass
+        textView.text = login
     }
 
     fun update (view: View){
@@ -56,35 +47,74 @@ class MainActivity : AppCompatActivity() {
             val row = TableRow(this)
             val label1 = TextView(this)
             val label2 = TextView(this)
-            val label3 = TextView(this)
-            val label4 = TextView(this)
 
-            label1.text = prod.id.toString()
-            label2.text = prod.name
-            label3.text = prod.category.toString()
-            label4.text = prod.masa.toString()
+            label1.text = prod.name
+            label2.text = prod.masa.toString()
 
             label1.setTextColor(Color.parseColor("#FFFFFF"))
             label2.setTextColor(Color.parseColor("#FFFFFF"))
-            label3.setTextColor(Color.parseColor("#FFFFFF"))
-            label4.setTextColor(Color.parseColor("#FFFFFF"))
 
             label1.setTextSize(TypedValue.COMPLEX_UNIT_DIP,18F)
             label2.setTextSize(TypedValue.COMPLEX_UNIT_DIP,18F)
-            label3.setTextSize(TypedValue.COMPLEX_UNIT_DIP,18F)
-            label4.setTextSize(TypedValue.COMPLEX_UNIT_DIP,18F)
 
             row.addView(label1)
             row.addView(label2)
-            row.addView(label3)
-            row.addView(label4)
+
+            row.setOnClickListener {
+                showPopup(prod)
+            }
 
             table.addView(row)
         }
     }
 
+    fun showPopup(produkt: Produkt){
+        myDialog?.setContentView(R.layout.popup_info)
+        myDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        myDialog?.show()
+
+        val textName = myDialog?.findViewById<TextView>(R.id.textPopupName)
+        val textWeight = myDialog?.findViewById<TextView>(R.id.textPopupWeight)
+        val editName = myDialog?.findViewById<EditText>(R.id.editPopupName)
+        val buttonEdit = myDialog?.findViewById<Button>(R.id.buttonPopupEdit)
+        val buttonOK = myDialog?.findViewById<Button>(R.id.buttonPopupOK)
+        val buttonCancel = myDialog?.findViewById<Button>(R.id.buttonPopupCancel)
+
+        textName?.text = produkt.name
+        textWeight?.text = produkt.masa.toString()
+
+        buttonEdit?.setOnClickListener {
+            textName?.visibility = View.INVISIBLE
+            buttonEdit.visibility = View.INVISIBLE
+
+            editName?.visibility = View.VISIBLE
+            buttonOK?.visibility = View.VISIBLE
+            buttonCancel?.visibility = View.VISIBLE
+        }
+
+        buttonCancel?.setOnClickListener {
+            textName?.visibility = View.VISIBLE
+            buttonEdit?.visibility = View.VISIBLE
+
+            editName?.visibility = View.INVISIBLE
+            buttonOK?.visibility = View.INVISIBLE
+            buttonCancel.visibility = View.INVISIBLE
+        }
+
+        buttonOK?.setOnClickListener {
+            textName?.visibility = View.VISIBLE
+            buttonEdit?.visibility = View.VISIBLE
+
+            editName?.visibility = View.INVISIBLE
+            buttonOK.visibility = View.INVISIBLE
+            buttonCancel?.visibility = View.INVISIBLE
+
+            textName?.text = editName?.text.toString()
+        }
+    }
+
     fun connect(){
-        val reg = Update(this, products,  object : CallBack {
+        val reg = Update(this, login, pass, products,  object : CallBack {
             override fun UpdateMyText(mystr: String) {
                 val textView = findViewById<View>(R.id.textView2) as TextView
                 textView.text = mystr
