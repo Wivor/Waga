@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_width="350dp"
+        android:layout_height="200dp"
+        android:background="@color/colorPrimaryDark"
+        android:padding="5dp"
+        android:layout_gravity="center">
+
+
+    <Button
+            android:text="Dodaj"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonProdAdd"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="8dp" android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="@color/textColor" android:background="@color/buttonBackground"
+            app:layout_constraintTop_toBottomOf="@+id/textView14"/>
+    <TextView
+            android:text="Nazwa:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView14" android:textColor="@color/textColor"
+            android:textSize="24sp" android:layout_marginStart="20dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="20dp" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/buttonProdAdd"/>
+    <EditText
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/editProdAddName"
+            android:textSize="24sp" android:background="@android:color/white" app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginRight="8dp" android:visibility="visible"
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/buttonProdAdd"/>
+</android.support.constraint.ConstraintLayout>

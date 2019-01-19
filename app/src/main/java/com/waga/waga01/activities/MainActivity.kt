@@ -1,4 +1,4 @@
-package com.waga.waga01
+package com.waga.waga01.activities
 
 
 import android.app.Dialog
@@ -10,13 +10,15 @@ import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
 import android.widget.*
+import com.waga.waga01.*
 import java.lang.Thread.sleep
 
 class MainActivity : AppCompatActivity() {
 
-    val products : ArrayList<Produkt> = ArrayList()
+    val products : ArrayList<Product> = ArrayList()
     val containers : ArrayList<Container> = ArrayList()
-    var myDialog: Dialog? = null
+    var prodInfoDialog: Dialog? = null
+    var prodAddDialog: Dialog? = null
     var login: String = " "
     var pass: String = " "
 
@@ -24,7 +26,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        myDialog = Dialog(this)
+        prodInfoDialog = Dialog(this)
+        prodAddDialog = Dialog(this)
         login = intent.getStringExtra("Login")
         pass = intent.getStringExtra("Password")
 
@@ -99,27 +102,42 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun showAddProdPopup(view: View){
+        println("hello")
+        prodAddDialog?.setContentView(R.layout.popup_addprod)
+        prodAddDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        prodAddDialog?.show()
+
+        val textName = prodAddDialog?.findViewById<EditText>(R.id.editProdAddName)
+        val buttonOK = prodAddDialog?.findViewById<Button>(R.id.buttonProdAdd)
+
+        buttonOK?.setOnClickListener {
+            AddProduct(this, login, pass, textName?.text.toString()).execute()
+            update()
+        }
+    }
 
 
-    fun showPopup(produkt: Produkt){
-        myDialog?.setContentView(R.layout.popup_info)
-        myDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        myDialog?.show()
+    fun showPopup(product: Product){
+        prodInfoDialog?.setContentView(R.layout.popup_info)
+        prodInfoDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        prodInfoDialog?.show()
 
-        val textName = myDialog?.findViewById<TextView>(R.id.textPopupName)
-        val textWeight = myDialog?.findViewById<TextView>(R.id.textPopupWeight)
-        val editName = myDialog?.findViewById<EditText>(R.id.editPopupName)
-        val buttonEdit = myDialog?.findViewById<Button>(R.id.buttonPopupEdit)
-        val buttonOK = myDialog?.findViewById<Button>(R.id.buttonPopupOK)
-        val buttonCancel = myDialog?.findViewById<Button>(R.id.buttonPopupCancel)
+        val textName = prodInfoDialog?.findViewById<TextView>(R.id.textPopupName)
+        val textWeight = prodInfoDialog?.findViewById<TextView>(R.id.textPopupWeight)
+        val editName = prodInfoDialog?.findViewById<EditText>(R.id.editPopupName)
+        val buttonEdit = prodInfoDialog?.findViewById<Button>(R.id.buttonProdAdd)
+        val buttonOK = prodInfoDialog?.findViewById<Button>(R.id.buttonPopupOK)
+        val buttonCancel = prodInfoDialog?.findViewById<Button>(R.id.buttonPopupCancel)
 
-        textName?.text = produkt.name
-        textWeight?.text = produkt.mass.toString()
+        textName?.text = product.name
+        textWeight?.text = product.mass.toString()
 
         buttonEdit?.setOnClickListener {
             textName?.visibility = View.INVISIBLE
             buttonEdit.visibility = View.INVISIBLE
 
+            editName?.setText(textName?.text.toString())
             editName?.visibility = View.VISIBLE
             buttonOK?.visibility = View.VISIBLE
             buttonCancel?.visibility = View.VISIBLE
@@ -143,11 +161,14 @@ class MainActivity : AppCompatActivity() {
             buttonCancel?.visibility = View.INVISIBLE
 
             textName?.text = editName?.text.toString()
+            product.name = editName?.text.toString()
+            println(product.name)
+            EditProduct(this, login, pass, product).execute()
         }
     }
 
     fun connect(){
-        val reg = Update(this, login, pass, products, containers,  object : CallBack {
+        val reg = Update(this, login, pass, products, containers, object : CallBack {
             override fun UpdateMyText(mystr: String) {
                 val textView = findViewById<View>(R.id.textView2) as TextView
                 textView.text = mystr

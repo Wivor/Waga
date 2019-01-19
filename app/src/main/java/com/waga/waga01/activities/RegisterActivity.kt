@@ -1,4 +1,4 @@
-package com.waga.waga01
+package com.waga.waga01.activities
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
@@ -7,7 +7,10 @@ import android.view.View
 import android.view.Window
 import android.widget.EditText
 import android.widget.TextView
-import kotlinx.android.synthetic.main.activity_register.*
+import com.waga.waga01.CallBack
+import com.waga.waga01.CallBackStatus
+import com.waga.waga01.R
+import com.waga.waga01.Register
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -54,10 +57,10 @@ class RegisterActivity : AppCompatActivity() {
             object : CallBack {
                 override fun UpdateMyText(mystr: String) {
                     loginError.text = mystr
-            }
+                }
             }, object : CallBackStatus {
                 override fun UpdateMyStatus(myStatus: Boolean) {
-                    if(myStatus)
+                    if (myStatus)
                         setStart()
                     else
                         loginError.text = "Już istnieje taki użytkownik"

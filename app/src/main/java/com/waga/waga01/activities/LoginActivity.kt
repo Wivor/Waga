@@ -1,4 +1,4 @@
-package com.waga.waga01
+package com.waga.waga01.activities
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
@@ -7,6 +7,9 @@ import android.view.View
 import android.view.Window
 import android.widget.EditText
 import android.widget.TextView
+import com.waga.waga01.CallBackStatus
+import com.waga.waga01.Login
+import com.waga.waga01.R
 
 class LoginActivity : AppCompatActivity() {
 
@@ -29,10 +32,9 @@ class LoginActivity : AppCompatActivity() {
         val log = Login(this, login, pass,
             object : CallBackStatus {
                 override fun UpdateMyStatus(myStatus: Boolean) {
-                    if(myStatus){
+                    if (myStatus) {
                         setMain(login, pass)
-                    }
-                    else{
+                    } else {
                         error.text = "Błędne dane logowania!"
                     }
                 }
