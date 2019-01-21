@@ -12,12 +12,14 @@ import android.view.View
 import android.widget.*
 import com.waga.waga01.*
 import java.lang.Thread.sleep
+import android.widget.ArrayAdapter
 
 class MainActivity : AppCompatActivity() {
 
     val products : ArrayList<Product> = ArrayList()
     val containers : ArrayList<Container> = ArrayList()
     var prodInfoDialog: Dialog? = null
+    var contInfoDialog: Dialog? = null
     var prodAddDialog: Dialog? = null
     var login: String = " "
     var pass: String = " "
@@ -27,12 +29,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         prodInfoDialog = Dialog(this)
+        contInfoDialog = Dialog(this)
         prodAddDialog = Dialog(this)
         login = intent.getStringExtra("Login")
         pass = intent.getStringExtra("Password")
 
-        update()
         setLogin()
+        update()
     }
 
     fun setLogin(){
@@ -83,7 +86,7 @@ class MainActivity : AppCompatActivity() {
             val label3 = TextView(this)
 
             label1.text = cont.id.toString()
-            label2.text = cont.name
+            label2.text = cont.prod.name
             label3.text = cont.mass.toString()
 
             label1.setTextColor(Color.parseColor("#FFFFFF"))
@@ -98,12 +101,15 @@ class MainActivity : AppCompatActivity() {
             row.addView(label2)
             row.addView(label3)
 
+            row.setOnClickListener {
+                showPopup(cont)
+            }
+
             tableCont.addView(row)
         }
     }
 
     fun showAddProdPopup(view: View){
-        println("hello")
         prodAddDialog?.setContentView(R.layout.popup_addprod)
         prodAddDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         prodAddDialog?.show()
@@ -117,6 +123,73 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun showPopup(cont: Container){
+        contInfoDialog?.setContentView(R.layout.popup_continfo)
+        contInfoDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        contInfoDialog?.show()
+
+        val textId = contInfoDialog?.findViewById<TextView>(R.id.textContId)
+        val textMass = contInfoDialog?.findViewById<TextView>(R.id.textContMass)
+        val textProd = contInfoDialog?.findViewById<TextView>(R.id.textContProd)
+        val spinner = contInfoDialog?.findViewById<Spinner>(R.id.spinnerContProd)
+        val buttonEdit = contInfoDialog?.findViewById<Button>(R.id.buttonContEdit)
+        val buttonOK = contInfoDialog?.findViewById<Button>(R.id.buttonContOK)
+        val buttonCancel = contInfoDialog?.findViewById<Button>(R.id.buttonContCancel)
+        val buttonDelete = contInfoDialog?.findViewById<Button>(R.id.buttonContDelete)
+
+        textId?.text = cont.id.toString()
+        textMass?.text = cont.mass.toString()
+        textProd?.text = cont.prod.name
+
+        val adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            products
+        )
+        spinner?.adapter = adapter
+
+        val spinnerPosition = adapter.getPosition(cont.prod)
+        spinner?.setSelection(spinnerPosition)
+
+        buttonEdit?.setOnClickListener {
+            textProd?.visibility = View.INVISIBLE
+            buttonEdit.visibility = View.INVISIBLE
+            buttonDelete?.visibility = View.INVISIBLE
+
+            spinner?.visibility = View.VISIBLE
+            buttonOK?.visibility = View.VISIBLE
+            buttonCancel?.visibility = View.VISIBLE
+        }
+
+        buttonCancel?.setOnClickListener {
+            textProd?.visibility = View.VISIBLE
+            buttonEdit?.visibility = View.VISIBLE
+            buttonDelete?.visibility = View.VISIBLE
+
+            spinner?.visibility = View.INVISIBLE
+            buttonOK?.visibility = View.INVISIBLE
+            buttonCancel.visibility = View.INVISIBLE
+        }
+
+        buttonOK?.setOnClickListener {
+            textProd?.visibility = View.VISIBLE
+            buttonEdit?.visibility = View.VISIBLE
+            buttonDelete?.visibility = View.VISIBLE
+
+            spinner?.visibility = View.INVISIBLE
+            buttonOK.visibility = View.INVISIBLE
+            buttonCancel?.visibility = View.INVISIBLE
+
+            SetProduct(this, login, pass, cont, spinner?.selectedItem as Product).execute()
+            textProd?.text = (spinner.selectedItem as Product).name
+            update()
+        }
+
+        buttonDelete?.setOnClickListener{
+            DeleteCont(this, login, pass, cont).execute()
+            contInfoDialog?.dismiss()
+        }
+    }
 
     fun showPopup(product: Product){
         prodInfoDialog?.setContentView(R.layout.popup_info)
@@ -129,6 +202,7 @@ class MainActivity : AppCompatActivity() {
         val buttonEdit = prodInfoDialog?.findViewById<Button>(R.id.buttonProdAdd)
         val buttonOK = prodInfoDialog?.findViewById<Button>(R.id.buttonPopupOK)
         val buttonCancel = prodInfoDialog?.findViewById<Button>(R.id.buttonPopupCancel)
+        val buttonDelete = prodInfoDialog?.findViewById<Button>(R.id.buttonPopupDel)
 
         textName?.text = product.name
         textWeight?.text = product.mass.toString()
@@ -136,6 +210,7 @@ class MainActivity : AppCompatActivity() {
         buttonEdit?.setOnClickListener {
             textName?.visibility = View.INVISIBLE
             buttonEdit.visibility = View.INVISIBLE
+            buttonDelete?.visibility = View.INVISIBLE
 
             editName?.setText(textName?.text.toString())
             editName?.visibility = View.VISIBLE
@@ -146,6 +221,7 @@ class MainActivity : AppCompatActivity() {
         buttonCancel?.setOnClickListener {
             textName?.visibility = View.VISIBLE
             buttonEdit?.visibility = View.VISIBLE
+            buttonDelete?.visibility = View.VISIBLE
 
             editName?.visibility = View.INVISIBLE
             buttonOK?.visibility = View.INVISIBLE
@@ -164,6 +240,12 @@ class MainActivity : AppCompatActivity() {
             product.name = editName?.text.toString()
             println(product.name)
             EditProduct(this, login, pass, product).execute()
+            update()
+        }
+
+        buttonDelete?.setOnClickListener{
+            DeleteProd(this, login, pass, product).execute()
+            prodInfoDialog?.dismiss()
         }
     }
 

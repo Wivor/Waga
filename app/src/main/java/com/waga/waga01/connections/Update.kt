@@ -65,13 +65,19 @@ class Update(val context: Context, val login: String, val pass: String, val prod
             }
 
             while (containerset!!.next()) {
-                var name = ""
-                if (containerset.getString(2).isNullOrEmpty())
-                    name = "Nowy"
-                else
-                    name = containerset.getString(2)
+                var prod = Product(0," - ", 0)
+                if (containerset.getInt(2).toString().isEmpty())
+                    prod = Product(0," - ", 0)
+                else{
+                    for (p in products){
+                        if (containerset.getInt(2) == p.id) {
+                            prod = p
+                            break
+                        }
+                    }
+                }
 
-                val container = Container(containerset.getInt(1), name, containerset.getInt(3))
+                val container = Container(containerset.getInt(1), prod, containerset.getInt(3))
                 containers.add(container)
             }
         } catch (ex: SQLException) {
